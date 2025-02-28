@@ -1,8 +1,14 @@
 
 
+
+
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { UsuarioEntity } from "./usuario.entity";
 import { UsuariosArmazenados } from "./usuario.dm";
+import { criaUsuarioDTO } from "./dto/usuario.dto";
+
+import { v4 as uuid } from "uuid"; //importante que seja colocado o import dessa forma.
+import { ListaUsuarioDTO } from "./dto/consulta.dto";
 
 @Controller('/usuario')
 export class UsuarioController{
@@ -11,18 +17,11 @@ export class UsuarioController{
     }
 
     @Post()
-    async criaUsuario(@Body() dadosUsuario) {
+    async criaUsuario(@Body() dadosUsuario: criaUsuarioDTO) {
 
-        var validacoes = this.clsUsuariosArmazenados.validaUsuario(dadosUsuario);
+     
 
-        if(validacoes.length > 0){
-            return{
-                status:'erro',
-                validacoes: validacoes
-            }
-        }
-
-        var novoUsuario = new UsuarioEntity(dadosUsuario.id, dadosUsuario.nome,
+        var novoUsuario = new UsuarioEntity(uuid(),dadosUsuario.nome,
                                             dadosUsuario.idade, dadosUsuario.cidade,
                                             dadosUsuario.email, dadosUsuario.telefone, dadosUsuario.senha);
         this.clsUsuariosArmazenados.AdicionarUsuario(novoUsuario);                                            
@@ -35,6 +34,16 @@ export class UsuarioController{
 }
     @Get()
     async listaUsuarios(){
-        return this.clsUsuariosArmazenados.Usuarios;
+
+
+        const usuariosListados = this.clsUsuariosArmazenados.Usuarios;
+        const listaRetorno = usuariosListados.map(
+            usuario => new ListaUsuarioDTO(
+                usuario.id,
+                usuario.cidade,
+                usuario.email
+            )
+        );
+                return listaRetorno;
     }
 }
