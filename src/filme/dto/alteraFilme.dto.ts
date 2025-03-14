@@ -2,7 +2,7 @@
 
 import { IsInt, IsOptional, IsString } from "class-validator";
 
-export class alteraFilmeDto {
+export class AlteraFilmeDto {
     @IsOptional()
     @IsString()
     nome: string;

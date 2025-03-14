@@ -2,21 +2,22 @@
 
 
 
-import { IsString ,IsInt} from "class-validator";
+import { IsString, IsInt, IsNotEmpty } from "class-validator";
 
-export class CriarFilmeDto{
+export class CriarFilmeDto {
     @IsString()
-    nome: String;
+    @IsNotEmpty({ message: "nome nao pode ser vazio" })
+    nome: string;
 
     @IsInt()
-    duracao: Number;
+    duracao: number;
 
     @IsString()
-    sinopse: String;
+    sinopse: string;
 
     @IsString()
-    ano: String;
+    ano: string;
 
     @IsString()
-    genero: String;
+    genero: string;
 }
